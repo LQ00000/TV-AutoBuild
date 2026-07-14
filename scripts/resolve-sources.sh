@@ -15,15 +15,16 @@ if [[ -z "$PRIVATE_SOURCE_TOKEN" ]]; then
   exit 1
 fi
 
-AUTHORIZATION=$(printf 'x-access-token:%s' "$PRIVATE_SOURCE_TOKEN" | base64 | tr -d '\r\n')
-
 resolve_sha() {
   key=$1
   repository=$(jq -er --arg key "$key" '.sources[$key].repository' "$CONFIG")
   branch=$(jq -er --arg key "$key" '.sources[$key].branch' "$CONFIG")
-  sha=$(git -c "http.extraHeader=Authorization: Basic ${AUTHORIZATION}" \
-    ls-remote "https://github.com/${repository}.git" "refs/heads/${branch}" \
-    | awk 'NR == 1 { print $1 }')
+  sha=$(curl --fail --silent --show-error --location \
+    --header "Authorization: Bearer ${PRIVATE_SOURCE_TOKEN}" \
+    --header "Accept: application/vnd.github+json" \
+    --header "X-GitHub-Api-Version: 2022-11-28" \
+    "https://api.github.com/repos/${repository}/git/ref/heads/${branch}" \
+    | jq -er '.object.sha')
   if [[ ! "$sha" =~ ^[0-9a-f]{40}$ ]]; then
     echo "Unable to resolve ${repository}:${branch}" >&2
     exit 1
