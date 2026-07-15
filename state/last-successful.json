@@ -4,12 +4,12 @@
     "TV": {
       "repository": "iptvorganization/TV",
       "branch": "fongmi",
-      "sha": "5bf89386c228f871d76291585656ec375e34b285"
+      "sha": "b5bff44c3fec4404f893893704b481a9bf2082d4"
     },
     "media": {
       "repository": "iptvorganization/media",
       "branch": "codec-support",
-      "sha": "4b93159999c1eef8b655e0610f6f00e39edf84aa"
+      "sha": "f35d04172f570aed7c09ed9c5d0c0cd5c11f0615"
     },
     "VividLib": {
       "repository": "iptvorganization/VividLib",
